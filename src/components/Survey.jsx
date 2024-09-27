@@ -1,4 +1,5 @@
 import { useState } from "react";
+import AnswersList from "./AnswersList";
 
 function Survey() {
   const [open, setOpen] = useState(false); //Ignore this state
@@ -13,13 +14,22 @@ function Survey() {
     email: "",
   };
 
+  const [formData, setFormData] = useState(initialState);
+
+  const [submittedForms, setSubmittedForms] = useState([]);
+
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
+    submittedForms.push(formData)
+    setSubmittedForms(submittedForms);
     setFormData(initialState);
+    e.preventDefault();
   };
 
-  const [formData, setFormData] = useState(initialState);
+  const RenderAnswerList = () => {
+    if(submittedForms.length > 0 ) {
+      return <AnswersList submittedForms={submittedForms} />
+    } 
+  }
 
   const onChange = (e) => {
     let timeSpendArray = formData.timeSpend;
@@ -40,14 +50,14 @@ function Survey() {
     <main className="survey">
       <section className={`survey__list ${open ? "open" : ""}`}>
         <h2>Answers list</h2>
-        {/* answers should go here */}
+        <RenderAnswerList />
       </section>
       <section className="survey__form">
         {
           <form onSubmit={handleSubmit} className="form">
             <h2>Tell us what you think about your rubber duck!</h2>
             <div className="form__group">
-              <h3>How do you like to spend time with your rubber duck?</h3>
+              <h3>Why do you like your rubber duck so much?</h3>
               <ul>
                 <li>
                   <label>
@@ -104,7 +114,7 @@ function Survey() {
               </ul>
             </div>
             <div className="form__group radio">
-              <h3>How do you rate your rubber duck colour?</h3>
+              <h3>How do you rate your rubber duck color?</h3>
               <ul>
                 <li>
                   <input
@@ -122,8 +132,9 @@ function Survey() {
                     id="color-two"
                     type="radio"
                     name="color"
-                    value={"2"}
+                    value="2"
                     checked={formData.color === "2"}
+                    onChange={(e) => onChange(e)}
                   />
                   <label htmlFor="color-two">2</label>
                 </li>
@@ -132,7 +143,7 @@ function Survey() {
                     id="color-three"
                     type="radio"
                     name="color"
-                    value={"3"}
+                    value="3"
                     checked={formData.color === "3"}
                     onChange={(e) => onChange(e)}
                   />
@@ -143,7 +154,7 @@ function Survey() {
                     id="color-four"
                     type="radio"
                     name="color"
-                    value={"4"}
+                    value="4"
                     checked={formData.color === "4"}
                     onChange={(e) => onChange(e)}
                   />
